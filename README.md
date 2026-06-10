@@ -23,26 +23,45 @@ Objetivos Específicos:
 3.	Requisitos Funcionais
 
 RF01 Cadastro de funcionários.
+
 RF02 Login de funcionários.
+
 RF03 Login de administradores.
+
 RF04 Página de perfil dos funcionários.
+
 RF05 Criar publicações.
+
 RF06 Excluir publicações.
+
 RF07 Todos os funcionários visualizam todas as publicações.
+
 RF08 Área de comunicação interna.
+
 RF09 Cadastro de caminhões.
+
 RF10 Armazenamento dos caminhões.
+
 RF11 Criação de rotas.
+
 RF12 Registro de rotas concluídas.
+
 RF13 Registro de rotas pendentes.
+
 RF14 Consulta de rotas.
+
 RF15 Todos os funcionários visualizam todas as rotas.
+
 RF16 Diferenciação entre administrador e funcionário.
+
 RF17 Apenas administradores gerenciam dados.¬
+
 RF18 Funcionários possuem acesso somente para visualização.
+
 4.	Requisitos Não Funcionais
 
 Acessível via navegadores modernos, interface intuitiva, armazenamento Firebase, autenticação obrigatória, integridade dos dados, tempo de resposta adequado, HTML/CSS, simulação de rede no Cisco Packet Tracer, acesso simultâneo e organização visual corporativa.
+
 5.	DER
 
 FUNCIONARIO(id_funcionario, nome, email, cargo, departamento, perfil, criado_em)
@@ -56,6 +75,7 @@ ROTA(id_rota, origem, destino, status, id_caminhao)
 Relacionamentos:
 FUNCIONARIO (1) ---- (N) PUBLICACAO
 CAMINHAO (1) ---- (N) ROTA
+
 6.	Modelo Relacional
 
 FUNCIONARIO(id_funcionario PK, nome, email, cargo, departamento, perfil, criado_em)
@@ -65,6 +85,7 @@ PUBLICACAO(id_publicacao PK, titulo, conteudo, data, id_funcionario FK)
 CAMINHAO(id_caminhao PK, placa, modelo, motorista)
 
 ROTA(id_rota PK, origem, destino, status, id_caminhao FK)
+
 7.	Casos de Uso
 
 Administrador:
@@ -90,17 +111,22 @@ Criar publicações, excluir publicações, cadastrar caminhões, criar rotas e 
 
 Funcionário:
 Visualizar todas as publicações, visualizar todas as rotas e acessar perfil.
+
 9.	Tecnologias e Conectividade
 
 Arquitetura cliente-servidor utilizando Flask, Firebase, HTML, CSS e Cisco Packet Tracer. Comunicação via HTTP/HTTPS, TCP/IP e DNS. Rede 192.168.1.0/24 com topologia em estrela.
+
 10.	Segurança
 
 
 
 
-Sistema Integrado de Gestão de Frota e Comunicação Corporativa
-Versão organizada por disciplinas para entrega acadêmica.
+🌐Sistema Integrado de Gestão de Frota e Comunicação Corporativa 
+Versão organizada por disciplinas para entrega acadêmica.🌐
+
+
 Banco de Dados
+
 Modelagem do banco de dados utilizando Firebase Firestore.
 
 Entidades:
