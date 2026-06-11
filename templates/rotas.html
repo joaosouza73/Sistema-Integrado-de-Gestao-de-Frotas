@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Rotas | Comunicação Interna{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">Operação</p>
+    <h1 class="page-title">Rotas</h1>
+    <p class="page-subtitle">Acompanhe motoristas, caminhões, cargas e status da frota.</p>
+  </div>
+
+  {% if session['usuario']['perfil'] in ['admin', 'gerente'] %}
+    <a class="btn btn-primary mt-3 mt-lg-0" href="{{ url_for('nova_rota') }}">
+      <i class="bi bi-plus-lg"></i>
+      Nova rota
+    </a>
+  {% endif %}
+</section>
+
+<section class="surface p-3 p-lg-4">
+  {% if rotas %}
+    <div class="row g-3">
+      {% for rota in rotas %}
+        <div class="col-lg-6 col-xxl-4">
+          <article class="metric-card h-100">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+              <div class="d-flex gap-3">
+                <span class="icon-tile"><i class="bi bi-truck"></i></span>
+                <div>
+                  <h2 class="h5 fw-bold mb-1">{{ rota.caminhao }}</h2>
+                  <p class="text-muted-app mb-0">{{ rota.motorista }}</p>
+                </div>
+              </div>
+              <span class="badge-soft {{ 'orange' if rota.status == 'pendente' else 'blue' if rota.status == 'em_andamento' else 'green' }}">
+                {{ rota.status.replace('_', ' ')|capitalize }}
+              </span>
+            </div>
+
+            <dl class="row small mb-3">
+              <dt class="col-4 text-muted-app">Origem</dt>
+              <dd class="col-8">{{ rota.origem }}</dd>
+              <dt class="col-4 text-muted-app">Destino</dt>
+              <dd class="col-8">{{ rota.destino }}</dd>
+              <dt class="col-4 text-muted-app">Carga</dt>
+              <dd class="col-8">{{ rota.carga }}</dd>
+              <dt class="col-4 text-muted-app">Saída</dt>
+              <dd class="col-8">{{ rota.data_saida }}</dd>
+            </dl>
+
+            {% if session['usuario']['perfil'] in ['admin', 'gerente'] %}
+              <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-primary btn-sm" href="{{ url_for('alterar_status_rota', id=rota._id, status='em_andamento') }}">Em andamento</a>
+                <a class="btn btn-outline-success btn-sm" href="{{ url_for('alterar_status_rota', id=rota._id, status='concluida') }}">Concluir</a>
+              </div>
+            {% endif %}
+          </article>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-signpost fs-1 text-muted"></i>
+      <h3 class="h5 fw-bold mt-3">Nenhuma rota cadastrada</h3>
+      <p class="text-muted-app">As rotas da frota aparecem aqui quando forem criadas.</p>
+      {% if session['usuario']['perfil'] in ['admin', 'gerente'] %}
+        <a class="btn btn-primary" href="{{ url_for('nova_rota') }}">Criar rota</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

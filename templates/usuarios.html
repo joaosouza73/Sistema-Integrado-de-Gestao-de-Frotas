@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Usuários | Comunicação Interna{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">Acessos</p>
+    <h1 class="page-title">Usuários</h1>
+    <p class="page-subtitle">Controle colaboradores, departamentos e permissões do sistema.</p>
+  </div>
+
+  <a class="btn btn-primary mt-3 mt-lg-0" href="{{ url_for('novo_usuario') }}">
+    <i class="bi bi-person-plus"></i>
+    Novo usuário
+  </a>
+</section>
+
+<section class="surface table-card">
+  <div class="p-3 p-lg-4 border-bottom">
+    <div class="row g-3 align-items-center">
+      <div class="col-lg">
+        <h2 class="h4 fw-bold mb-1">Equipe cadastrada</h2>
+        <p class="text-muted-app mb-0">{{ usuarios|length }} usuário(s) encontrado(s).</p>
+      </div>
+      <div class="col-lg-4">
+        <div class="input-group">
+          <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+          <input class="form-control" type="search" placeholder="Pesquisar..." data-table-search="#usuariosTable">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if usuarios %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle" id="usuariosTable">
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Cargo</th>
+            <th>Departamento</th>
+            <th>Perfil</th>
+            <th class="text-end">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in usuarios %}
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                  <span class="avatar-sm">{{ u.nome[0]|upper }}</span>
+                  <div>
+                    <strong>{{ u.nome }}</strong>
+                    <div class="text-muted-app small">{{ u.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ u.cargo }}</td>
+              <td><span class="badge-soft primary">{{ u.departamento }}</span></td>
+              <td>
+                <span class="badge-soft {{ 'red' if u.perfil == 'admin' else 'orange' if u.perfil == 'gerente' else 'green' }}">
+                  {{ u.perfil|capitalize }}
+                </span>
+              </td>
+              <td class="text-end">
+                {% if session['usuario']['perfil'] == 'admin' %}
+                  <a class="btn btn-outline-danger btn-sm" href="{{ url_for('deletar_usuario', id=u._id) }}" onclick="return confirm('Remover este usuário?');">
+                    <i class="bi bi-trash"></i>
+                    Remover
+                  </a>
+                {% else %}
+                  <span class="text-muted-app small">Restrito ao admin</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-people fs-1 text-muted"></i>
+      <h3 class="h5 fw-bold mt-3">Nenhum usuário encontrado</h3>
+      <p class="text-muted-app">Cadastre o primeiro colaborador para liberar o acesso ao sistema.</p>
+      <a class="btn btn-primary" href="{{ url_for('novo_usuario') }}">Cadastrar usuário</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Usuário | Comunicação Interna{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">Cadastro</p>
+    <h1 class="page-title">Novo usuário</h1>
+    <p class="page-subtitle">Adicione um colaborador e defina o nível de acesso dentro do sistema.</p>
+  </div>
+</section>
+
+<section class="surface p-3 p-lg-4">
+  <form method="post" class="row g-4">
+    <div class="col-md-6">
+      <label for="nome" class="form-label fw-semibold">Nome completo</label>
+      <input id="nome" class="form-control" type="text" name="nome" minlength="3" required value="{{ dados_form.get('nome', '') }}" placeholder="Nome do colaborador">
+    </div>
+
+    <div class="col-md-6">
+      <label for="email" class="form-label fw-semibold">E-mail</label>
+      <input id="email" class="form-control" type="email" name="email" required value="{{ dados_form.get('email', '') }}" placeholder="nome@empresa.com">
+    </div>
+
+    <div class="col-md-4">
+      <label for="cargo" class="form-label fw-semibold">Cargo</label>
+      <input id="cargo" class="form-control" type="text" name="cargo" required value="{{ dados_form.get('cargo', '') }}" placeholder="Ex: Analista">
+    </div>
+
+    <div class="col-md-4">
+      <label for="departamento" class="form-label fw-semibold">Departamento</label>
+      <input id="departamento" class="form-control" type="text" name="departamento" required value="{{ dados_form.get('departamento', '') }}" placeholder="Ex: Operação">
+    </div>
+
+    <div class="col-md-4">
+      <label for="perfil" class="form-label fw-semibold">Perfil</label>
+      <select id="perfil" class="form-select" name="perfil" required>
+        <option value="">Selecione</option>
+        <option value="admin" {% if dados_form.get('perfil') == 'admin' %}selected{% endif %}>Admin</option>
+        <option value="gerente" {% if dados_form.get('perfil') == 'gerente' %}selected{% endif %}>Gerente</option>
+        <option value="funcionario" {% if dados_form.get('perfil') == 'funcionario' %}selected{% endif %}>Funcionário</option>
+      </select>
+    </div>
+
+    <div class="col-12">
+      <div class="alert alert-info border-0 mb-0">
+        <strong>Perfis:</strong>
+        Admin gerencia tudo, gerente cria publicações e rotas, funcionário apenas acompanha informações.
+      </div>
+    </div>
+
+    <div class="col-12 d-flex gap-2 flex-wrap">
+      <button class="btn btn-primary btn-lg" type="submit">
+        <i class="bi bi-person-check"></i>
+        Salvar usuário
+      </button>
+      <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('listar_usuarios') }}">Cancelar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

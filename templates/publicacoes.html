@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Publicações | Comunicação Interna{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">Comunicação</p>
+    <h1 class="page-title">Publicações</h1>
+    <p class="page-subtitle">Gerencie avisos, notícias e eventos enviados aos departamentos.</p>
+  </div>
+
+  {% if session['usuario']['perfil'] in ['admin', 'gerente'] %}
+    <a class="btn btn-primary mt-3 mt-lg-0" href="{{ url_for('nova_publicacao') }}">
+      <i class="bi bi-plus-lg"></i>
+      Nova publicação
+    </a>
+  {% endif %}
+</section>
+
+<section class="surface table-card">
+  <div class="p-3 p-lg-4 border-bottom">
+    <div class="row g-3 align-items-center">
+      <div class="col-lg">
+        <h2 class="h4 fw-bold mb-1">Comunicados cadastrados</h2>
+        <p class="text-muted-app mb-0">{{ publicacoes|length }} publicação(ões) encontradas.</p>
+      </div>
+      <div class="col-lg-4">
+        <div class="input-group">
+          <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+          <input class="form-control" type="search" placeholder="Pesquisar..." data-table-search="#publicacoesTable">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if publicacoes %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle" id="publicacoesTable">
+        <thead>
+          <tr>
+            <th>Publicação</th>
+            <th>Tipo</th>
+            <th>Departamentos</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in publicacoes %}
+            <tr>
+              <td>
+                <div class="d-flex gap-3">
+                  <span class="icon-tile"><i class="bi bi-megaphone"></i></span>
+                  <div>
+                    <strong>{{ p.titulo }}</strong>
+                    <p class="text-muted-app mb-0">{{ p.conteudo }}</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge-soft {{ 'blue' if p.tipo == 'aviso' else 'green' if p.tipo == 'noticia' else 'orange' }}">
+                  {{ p.tipo|capitalize }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex gap-2 flex-wrap">
+                  {% for departamento in p.departamentos %}
+                    <span class="badge-soft primary">{{ departamento }}</span>
+                  {% endfor %}
+                </div>
+              </td>
+              <td class="text-muted-app">{{ p.criado_em|br_date }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-inbox fs-1 text-muted"></i>
+      <h3 class="h5 fw-bold mt-3">Nenhuma publicação encontrada</h3>
+      <p class="text-muted-app">Crie a primeira publicação para começar a centralizar os avisos.</p>
+      {% if session['usuario']['perfil'] in ['admin', 'gerente'] %}
+        <a class="btn btn-primary" href="{{ url_for('nova_publicacao') }}">Criar publicação</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

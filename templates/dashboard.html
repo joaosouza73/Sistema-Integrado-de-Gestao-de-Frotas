@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Comunicação Interna{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">Visão geral</p>
+    <h1 class="page-title">Olá, {{ usuario.nome }}.</h1>
+    <p class="page-subtitle">
+      Acompanhe os números principais da comunicação interna e da operação de rotas.
+    </p>
+  </div>
+
+  <div class="d-flex gap-2 flex-wrap mt-3 mt-lg-0">
+    {% if usuario.perfil in ['admin', 'gerente'] %}
+      <a class="btn btn-primary" href="{{ url_for('nova_publicacao') }}">
+        <i class="bi bi-plus-lg"></i>
+        Nova publicação
+      </a>
+      <a class="btn btn-outline-primary" href="{{ url_for('nova_rota') }}">
+        <i class="bi bi-signpost"></i>
+        Nova rota
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% if firebase_erro %}
+  <div class="alert alert-warning border-0 shadow-sm">
+    <strong>Firebase temporariamente indisponível.</strong>
+    Verifique o arquivo <code>firebase-service-account.json</code> e a variável <code>FIREBASE_CREDENTIALS</code>.
+  </div>
+{% endif %}
+
+<section class="row g-3 mb-4">
+  <div class="col-md-6 col-xl-3">
+    <div class="metric-card">
+      <span>Publicações</span>
+      <strong>{{ total_publicacoes }}</strong>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="metric-card">
+      <span>Usuários</span>
+      <strong>{{ total_usuarios }}</strong>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="metric-card">
+      <span>Rotas</span>
+      <strong>{{ total_rotas }}</strong>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="metric-card">
+      <span>Rotas pendentes</span>
+      <strong>{{ rotas_pendentes }}</strong>
+    </div>
+  </div>
+</section>
+
+<section class="surface p-3 p-lg-4">
+  <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap mb-3">
+    <div>
+      <h2 class="h4 fw-bold mb-1">Últimas publicações</h2>
+      <p class="text-muted-app mb-0">Comunicados mais recentes enviados ao time.</p>
+    </div>
+    <a class="btn btn-outline-secondary" href="{{ url_for('listar_publicacoes') }}">
+      Ver todas
+      <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
+
+  {% if avisos %}
+    <div class="row g-3">
+      {% for aviso in avisos %}
+        <div class="col-lg-6 col-xxl-4">
+          <article class="metric-card h-100">
+            <div class="d-flex align-items-start gap-3">
+              <span class="icon-tile">
+                <i class="bi bi-megaphone"></i>
+              </span>
+              <div>
+                <span class="badge-soft blue">{{ aviso.tipo|capitalize }}</span>
+                <h3 class="h5 fw-bold mt-3 mb-2">{{ aviso.titulo }}</h3>
+                <p class="text-muted-app mb-3">{{ aviso.conteudo }}</p>
+                <small class="text-muted-app">{{ aviso.criado_em|br_date }}</small>
+              </div>
+            </div>
+          </article>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-inbox fs-1 text-muted"></i>
+      <h3 class="h5 fw-bold mt-3">Nenhuma publicação ainda</h3>
+      <p class="text-muted-app mb-0">Quando houver comunicados, eles aparecem aqui.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

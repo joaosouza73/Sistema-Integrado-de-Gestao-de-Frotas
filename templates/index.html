@@ -1,0 +1,509 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Painel de Avisos{% endblock %}
+
+{% block content %}
+
+<div class="hero">
+
+  <div>
+    <span class="hero-badge">
+      🔔 Sistema Interno
+    </span>
+
+    <h1>
+      Painel de Avisos
+    </h1>
+
+    <p class="hero-text">
+      Centralize comunicados, atualizações e informações importantes da empresa em um ambiente moderno, rápido e organizado.
+    </p>
+  </div>
+
+  <div class="hero-stats">
+
+    <div class="stat-card">
+      <span>Total de Avisos</span>
+      <strong>{{ avisos|length }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Status</span>
+      <strong style="color:#16a34a;">
+        Online
+      </strong>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="card">
+
+  <div class="top-table">
+
+    <div>
+      <h2>
+        Últimas Publicações
+      </h2>
+
+      <p class="muted">
+        Avisos internos enviados recentemente.
+      </p>
+    </div>
+
+    <div class="search-box">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Pesquisar aviso..."
+      >
+    </div>
+
+  </div>
+
+  {% if avisos %}
+
+  <div class="table-wrapper">
+
+    <table id="avisosTable">
+
+      <thead>
+        <tr>
+          <th>Publicação</th>
+          <th>Tipo</th>
+          <th>Data</th>
+          <th>Departamentos</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {% for aviso in avisos %}
+
+        <tr>
+
+          <td>
+
+            <div class="aviso-info">
+
+              <div class="aviso-icon">
+                {% if aviso.tipo == 'urgente' %}
+                  🚨
+                {% elif aviso.tipo == 'informativo' %}
+                  ℹ️
+                {% elif aviso.tipo == 'reuniao' %}
+                  📅
+                {% else %}
+                  📢
+                {% endif %}
+              </div>
+
+              <div>
+
+                <strong class="titulo-aviso">
+                  {{ aviso.titulo }}
+                </strong>
+
+                <p class="conteudo-aviso">
+                  {{ aviso.conteudo }}
+                </p>
+
+              </div>
+
+            </div>
+
+          </td>
+
+          <td>
+
+            <span class="badge
+              {% if aviso.tipo == 'urgente' %}
+                badge-danger
+              {% elif aviso.tipo == 'informativo' %}
+                badge-info
+              {% elif aviso.tipo == 'reuniao' %}
+                badge-warning
+              {% else %}
+                badge-default
+              {% endif %}
+            ">
+
+              {{ aviso.tipo|capitalize }}
+
+            </span>
+
+          </td>
+
+          <td>
+
+            <div class="data-box">
+              🕒 {{ aviso.criado_em }}
+            </div>
+
+          </td>
+
+          <td>
+
+            <div class="departamentos">
+
+              {% for departamento in aviso.departamentos %}
+
+                <span class="departamento-chip">
+                  {{ departamento }}
+                </span>
+
+              {% endfor %}
+
+            </div>
+
+          </td>
+
+        </tr>
+
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  {% else %}
+
+  <div class="empty-state">
+
+    <div class="empty-icon">
+      📭
+    </div>
+
+    <h2>
+      Nenhum aviso encontrado
+    </h2>
+
+    <p>
+      Ainda não existem publicações cadastradas no sistema.
+    </p>
+
+  </div>
+
+  {% endif %}
+
+</div>
+
+<style>
+
+.hero{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+
+  margin-bottom: 24px;
+  padding: 36px;
+
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,113,227,0.12),
+      rgba(20,184,166,0.10)
+    );
+
+  border: 1px solid rgba(255,255,255,0.4);
+
+  backdrop-filter: blur(20px);
+
+  overflow: hidden;
+  position: relative;
+}
+
+.hero::before{
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  background: rgba(255,255,255,0.18);
+
+  border-radius: 50%;
+
+  top: -120px;
+  right: -100px;
+}
+
+.hero h1{
+  font-size: 3rem;
+  margin-top: 12px;
+  margin-bottom: 12px;
+
+  letter-spacing: -2px;
+}
+
+.hero-text{
+  max-width: 700px;
+
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.hero-badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  background: rgba(255,255,255,0.7);
+
+  color: #0071e3;
+
+  border-radius: 999px;
+
+  padding: 8px 14px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  backdrop-filter: blur(10px);
+}
+
+.hero-stats{
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.stat-card{
+  min-width: 150px;
+
+  background: rgba(255,255,255,0.7);
+
+  padding: 20px;
+
+  border-radius: 24px;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.05);
+
+  backdrop-filter: blur(10px);
+}
+
+.stat-card span{
+  display: block;
+
+  font-size: 13px;
+  color: #6b7280;
+
+  margin-bottom: 8px;
+}
+
+.stat-card strong{
+  font-size: 2rem;
+  letter-spacing: -1px;
+}
+
+.top-table{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.search-box{
+  width: 280px;
+}
+
+.search-box input{
+  margin: 0;
+}
+
+.aviso-info{
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.aviso-icon{
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,113,227,0.12),
+      rgba(20,184,166,0.12)
+    );
+
+  font-size: 24px;
+
+  flex-shrink: 0;
+}
+
+.titulo-aviso{
+  font-size: 16px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.conteudo-aviso{
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.badge{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.badge-danger{
+  background: rgba(220,38,38,0.10);
+  color: #dc2626;
+}
+
+.badge-info{
+  background: rgba(0,113,227,0.10);
+  color: #0071e3;
+}
+
+.badge-warning{
+  background: rgba(245,158,11,0.10);
+  color: #d97706;
+}
+
+.badge-default{
+  background: rgba(107,114,128,0.10);
+  color: #374151;
+}
+
+.data-box{
+  color: #6b7280;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.departamentos{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.departamento-chip{
+  background: rgba(0,113,227,0.08);
+
+  color: #0071e3;
+
+  padding: 7px 12px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.empty-state{
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-icon{
+  font-size: 5rem;
+  margin-bottom: 18px;
+}
+
+.empty-state h2{
+  margin-bottom: 10px;
+}
+
+.empty-state p{
+  color: #6b7280;
+}
+
+@media(max-width: 900px){
+
+  .hero{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero h1{
+    font-size: 2.3rem;
+  }
+
+  .hero-stats{
+    width: 100%;
+  }
+
+  .stat-card{
+    flex: 1;
+  }
+
+  .search-box{
+    width: 100%;
+  }
+
+}
+
+@media(max-width: 768px){
+
+  .hero{
+    padding: 28px;
+  }
+
+  .hero h1{
+    font-size: 2rem;
+  }
+
+  .aviso-info{
+    flex-direction: column;
+  }
+
+}
+
+</style>
+
+<script>
+
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function(){
+
+  const value = this.value.toLowerCase();
+
+  const rows = document.querySelectorAll("#avisosTable tbody tr");
+
+  rows.forEach(row => {
+
+    const text = row.innerText.toLowerCase();
+
+    row.style.display =
+      text.includes(value)
+      ? ""
+      : "none";
+
+  });
+
+});
+
+</script>
+
+{% endblock %}
